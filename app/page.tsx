@@ -197,24 +197,63 @@ function ChoiceCard({
 }) {
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
+  // 1) Ana kaynak: img
+  // 2) İlk hata → label tabanlı Unsplash araması
+  // 3) O da hata → placeholder
+  const fallbackByLabel = `https://source.unsplash.com/1200x1500/?${encodeURIComponent(
+    label
+  )}`;
+
+  const [src, setSrc] = useState<string>(img || fallbackByLabel);
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  const onError = () => {
+    if (src !== fallbackByLabel) {
+      setSrc(fallbackByLabel);
+    } else {
+      setFailed(true);
+    }
+  };
+
   return (
     <article
-      className={cn(
+      className={[
         "group relative overflow-hidden rounded-2xl border border-zinc-800/80",
         "bg-zinc-950/60 shadow-[inset_0_1px_0_0_rgba(255,255,255,.04)]",
-      )}
+      ].join(" ")}
     >
-      {/* Görsel */}
-      <div className="aspect-[4/5] w-full">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={img}
-          alt={label}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-          loading="eager"
-          draggable={false}
-          onClick={() => btnRef.current?.click()}
-        />
+      <div className="aspect-[4/5] w-full relative">
+        {/* Skeleton */}
+        {!loaded && !failed && (
+          <div className="absolute inset-0 animate-pulse bg-zinc-900/60" />
+        )}
+
+        {failed ? (
+          // Nihai placeholder
+          <div className="absolute inset-0 grid place-items-center bg-[linear-gradient(135deg,#0f172a,#0a0a0a)]">
+            <div className="text-center">
+              <div className="text-3xl mb-2">🖼️</div>
+              <div className="text-zinc-300 font-medium">{label}</div>
+              <div className="text-zinc-500 text-xs mt-1">Görsel bulunamadı</div>
+            </div>
+          </div>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={label}
+            className={[
+              "absolute inset-0 h-full w-full object-cover transition-transform duration-300",
+              loaded ? "opacity-100 group-hover:scale-[1.02]" : "opacity-0",
+            ].join(" ")}
+            loading="eager"
+            draggable={false}
+            onLoad={() => setLoaded(true)}
+            onError={onError}
+            onClick={() => btnRef.current?.click()}
+          />
+        )}
       </div>
 
       {/* Alt bar */}
