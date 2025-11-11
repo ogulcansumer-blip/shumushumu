@@ -2,12 +2,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-// ——— Minimal, single-file React MVP for a TikTok×Instagram style duality feed ———
-// - Infinite card feed with left/right choices (tap/click or ← → keys)
-// - Sticky top bar, story-style category strip, bottom tabbar
-// - Progress ring that fills as gözle takip edilecek sayaç (choices)
-// - Lightweight share modal & copy link
-// - LocalStorage to persist quick stats
 // - Simple metrics panel (CTR≈choice rate, share rate, retention proxy)
 // - Hook points for real analytics (window.shumu.track)
 //
