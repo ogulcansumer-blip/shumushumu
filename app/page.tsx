@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+"use client";
+ React, { useEffect, useMemo, useRef, useState } from "react";
 
 // --- Minimal, single-file React MVP for a TikTok×Instagram style duality feed ---
 // Styling: TailwindCSS (assumed available in Canvas). No external UI libs required.
